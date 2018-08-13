@@ -3,5 +3,5 @@ Script to convert an adj file (parallel aracne output) to an adjmatrix (upper tr
 
 ## Running the script
 ```
-Rscript adjToadjmatrix. adjFile [outputFile]
+Rscript adjToadjmatrix.R adjFile [outputFile]
 ```
