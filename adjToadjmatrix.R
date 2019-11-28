@@ -1,3 +1,8 @@
+if(!require(data.table)){
+  install.packages("data.table")
+  library(data.table)
+}
+
 args = commandArgs(trailingOnly=TRUE)
 if(length(args) < 1) {
   stop("You need to provide the path to the adj file.")
@@ -17,8 +22,8 @@ adj.to.adjmatrix = function(adj, genelist, no.cores = 6){
   r = parallel::mclapply(X = indices, 
                          mc.cores = no.cores, 
                          FUN = function(i){
-    v = c(rep(NA, i-1), c(1.0, as.numeric(adj[i, 1:(n -i)])))
-  })
+                           v = c(rep(NA, i-1), c(1.0, as.numeric(adj[i, 1:(n -i)])))
+                         })
   cat("Parallel computations done\n")
   r = plyr::ldply(r)
   r[n,n] = 1
@@ -29,4 +34,4 @@ adj.to.adjmatrix = function(adj, genelist, no.cores = 6){
 
 adjmatrix <- adj.to.adjmatrix(aracne.inter.num, genes, 6)
 cat("Saving file\n")
-save(adjmatrix, file = out.file, compress = "xz")
+fwrite(adjmatrix, file = out.file, row.names = F, col.names = T, sep = "\t")
